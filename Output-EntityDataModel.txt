@@ -1,0 +1,6 @@
+﻿Generated model file: Elin8999.edmx.
+Loading metadata from the database took 00:00:00.4817921.
+Generating the model took 00:00:01.2156592.
+Generated model file: Elin8999.edmx.
+Loading metadata from the database took 00:00:00.5432321.
+Generating the model took 00:00:00.9778643.

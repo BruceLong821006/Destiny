@@ -1,0 +1,44 @@
+﻿
+@if (!string.IsNullOrEmpty(ViewBag.UserName))
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <label class="control-label" style="padding-top:15px; padding-bottom:15px;">Hello @ViewBag.UserName</label>
+        </li>
+        <li><a href="javascript:LogOff();">登出</a></li>
+    </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("会员注册", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("会员登录", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+
+<script type="text/javascript">
+    function LogOff()
+    {
+
+        $.ajax({
+            url: "/Account/UserLogOff",
+            datatype: "json",
+            type: "POST",
+            success: function (data) {
+                var json = eval("(" + data + ")");
+                if (json.Status == "Success") {
+                    location.reload();
+                }
+                else
+                    alert(json.ErrorMessage);
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            error: function () {
+
+            }
+        });
+        location.reload();
+    }
+
+</script>

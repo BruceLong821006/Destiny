@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class='panel panel-success' style="margin-top: 10px;">
+    <div class='panel-heading'>
+        <span style="font-size:16pt; font-family:'Microsoft YaHei'">@ViewBag.Title.</span>
+    </div>
+</div>
+
+<form class="panel-body form-horizontal">
+    <div class="form-group">
+        <label class="control-label col-sm-2">账号：</label>
+        <div>
+            <input type="text" id="txtName" class="form-control" placeholder="必填" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">密码：</label>
+        <div>
+            <input type="password" id="txtPWD" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" id="btnLogin" class="btn btn-default" value="登录" />
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnLogin").click(function () {
+            var name = $("#txtName").val();
+            var pwd = $("#txtPWD").val();
+            if (name == "")
+            {
+                alert("请输入账号名称!")
+                return false;
+            }
+            if (pwd == "") {
+                alert("请输入密码!")
+                return false;
+            }
+            var data = {
+                Mobile: name,
+                Password: pwd
+            };
+            $.ajax({
+                url: "/Account/UserLogin",
+                type: "POST",
+                datatype: "json",
+                data: data,
+                success: function (result) {
+                    var json = eval("(" + result + ")");
+                    if (json.Status == "Success")
+                        window.location = "/Forecast/NumForecast";
+                    else
+                        alert(result.ErrorMessage);
+                },
+                error: function () {
+                }
+            });
+        });
+    });
+
+</script>

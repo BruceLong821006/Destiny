@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewBag.Title = "易林正宗->易林卜事";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+
+</style>
+
+<div class='panel panel-success' style="margin-top: 10px;">
+    <div class='panel-heading'>
+        <span style="font-size:16pt; font-family:'Microsoft YaHei'">六十四幢测算.</span>
+    </div>
+</div>
+<div class="panel-body form-horizontal">
+    <div class="form-group">
+        @*<div class="col-md-4">
+            <input type="text" class="form-control" id="txtNum" />
+        </div>*@
+        <div class="col-md-2">
+            <input type="button" value="开始测算" id="btnSubmit" class="btn btn-default" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">测算结果：</label>
+        <span id="spResult" class="control-label col-md-8" style="text-align:left;"></span>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">卦数：</label>
+        <span id="spResult1" class="control-label col-md-8" style="text-align:left;"></span>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalCondition" tabindex="-1" role="dialog" aria-labelledby="myModalCondition-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#d9edf7;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="myModalCondition-label">六十四幢測算</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label col-sm-12">本次测算会算出6个楼栋数,点击确认后会根据6组楼栋数来测算卦象。</label>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6"><img src="~/Content/Imgs/Gossip.gif" style="width:250px; height:250px;" /></div>
+                    <div class="col-lg-5 calcUpdate" style="margin-left:10px;">
+                        <div class="row">
+                            <input type="text" id="txtNum1" style="width:100px; display:inline-block;" class="form-control" readonly="readonly" value="" /> 
+                            <span class="control-label" style="display:inline-block;" id="spnNum1">预测中...</span>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <input type="text" id="txtNum2" style="width:100px; display:inline-block;" class="form-control" readonly="readonly" value="" />
+                            <span class="control-label" style="display:inline-block;" id="spnNum2">预测中...</span>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <input type="text" id="txtNum3" style="width:100px; display:inline-block;" class="form-control" readonly="readonly" value="" />
+                            <span class="control-label" style="display:inline-block;" id="spnNum3">预测中...</span>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <input type="text" id="txtNum4" style="width:100px; display:inline-block;" class="form-control" readonly="readonly" value="" />
+                            <span class="control-label" style="display:inline-block;" id="spnNum4">预测中...</span>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <input type="text" id="txtNum5" style="width:100px; display:inline-block;" class="form-control" readonly="readonly" value="" />
+                            <span class="control-label" style="display:inline-block;" id="spnNum5">预测中...</span>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <input type="text" id="txtNum6" style="width:100px; display:inline-block;" class="form-control" readonly="readonly" value="" />
+                            <span class="control-label" style="display:inline-block;" id="spnNum6">预测中...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="divChkboxList">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary calcUpdate" id="btnOK">开始预测</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="btnClose">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {
+            $("#txtNum1").val("");
+            $("#txtNum2").val("");
+            $("#txtNum3").val("");
+            $("#txtNum4").val("");
+            $("#txtNum5").val("");
+            $("#txtNum6").val("");
+            $("#myModalCondition").modal('show');//导入层显示
+            $.ajax({
+                url: "/Forecast/SixtyFourDongSubmit",
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.Status == "Success") {
+                        FetchNext(6, json.Num);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                error: function () {
+                }
+            });
+        });
+
+        $("#btnOK").click(function () {
+            SixtyFourClac();
+        });
+
+        //$(".calcUpdate").hide();
+        $("#btnClose").click(function () {
+
+        })
+    });
+
+    function SixtyFourClac()
+    {
+        var firstNum = $("#txtNum6").val();
+        var secondNum = $("#txtNum1").val();
+        $("#spResult1").text(firstNum + ";" + secondNum);
+        $.ajax({
+            url: "/Forecast/SixtyFourDongCalc",
+            type: "get",
+            datatype: "json",
+            data: { firstNum: firstNum, secondNum: secondNum },
+            success: function (data) {
+                var json = eval("(" + data + ")");
+                if (json.Status == "Success") {
+                    $("#spResult").text(json.Content);
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+                $("#myModalCondition").modal('hide');
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function FetchNext(num, obj) {
+        setTimeout(function () {
+            var txt = obj[num-1];
+            $("#spnNum" + (num)).hide();
+            $("#txtNum" + (num)).val(txt);
+            num = num - 1;
+            if (num >= 1)
+                FetchNext(num, obj);
+            else
+                SixtyFourClac();
+        }, "2000");
+    }
+</script>
+

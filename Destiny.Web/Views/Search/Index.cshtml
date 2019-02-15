@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/Search")
+
+<div class="page-container">
+    <h1>Login</h1>
+    <div style="position: relative;width: 305px;margin: 15px auto 0 auto;text-align: center;">
+        <input type="text" name="username" class="username" id="username" placeholder="Username">
+        <input type="password" name="password" class="password" id="password" placeholder="Password">
+        <input type="button" id="btnLogin" value="Login" class="buttonLogin" />
+        <div class="error"><span>+</span></div>
+    </div>
+</div>
+

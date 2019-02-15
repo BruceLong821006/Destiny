@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "易林正宗->号码现象";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class='panel panel-success' style="margin-top: 10px;">
+    <div class='panel-heading'>
+        <span style="font-size:16pt; font-family:'Microsoft YaHei'">请输入号码：</span>
+    </div>
+</div>
+<div class="panel-body form-horizontal">
+    <div class="form-group">
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="txtNum" />
+        </div>
+        <div class="col-md-2">
+            @*<input type="button" value="开始测算" id="btnSubmit" class="btn btn-default" />*@
+            <input type="button" value="支付测算" id="btnAliPay" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
+<div id="resultPay"></div>
+
+<div class="modal fade" id="View" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="text-align:center;">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#d9edf7;">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="text-align:left;">
+                    测算结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12" style="align-content:flex-start; text-align:left;">
+                        <label class="control-label">编号：</label>
+                        <label id="num" class="control-label" style="text-align:left;"></label>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-lg-12" style="align-content:flex-start;">
+                        <label id="result" class="control-label" style="text-align:left;"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    Message
+                </h4>
+            </div>
+            <div class="modal-body" id="ModelContent">
+                <!--系统提示内容-->
+                Please wait ...
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#btnSubmit").click(function () {
+            if ($("#txtNum").val() == "") {
+                alert("请输入数字");
+                return false;
+            }
+            var num = $("#txtNum").val();
+            $("#myModal").modal('show');
+            $.ajax({
+                url: "/Forecast/NumSubmit?num=" + num,
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.Status == "Success") {
+                        $("#num").text(json.Num);
+                        $("#result").text(json.Result);
+                        $("#View").modal("show");
+                        $("#myModal").modal('hide');
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                error: function () {
+                }
+            });
+        });
+
+        var numParam = getQueryString("num");
+        if (numParam != "" && numParam != "null" && numParam != null)
+        {
+            var base = new Base64();
+            var numResult = base.decode(numParam);
+            $("#txtNum").val(numResult);
+            $("#myModal").modal('show');
+            $.ajax({
+                url: "/Forecast/NumSubmit?num=" + numParam,
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.Status == "Success") {
+                        $("#num").text(json.Num);
+                        $("#result").text(json.Result);
+                        $("#View").modal("show");
+                        $("#myModal").modal('hide');
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                error: function () {
+                }
+            });
+        }
+
+
+        $("#btnAliPay").click(function () {
+            var num = $("#txtNum").val();
+            if (num == "")
+            {
+                alert("请输入数字");
+                return false;
+            }
+            $.ajax({
+                url: "/Forecast/NumPay?num=" + num,
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.Status == "Success") {
+                        $("#resultPay").append(json.body);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                error: function () {
+                }
+            });
+        });
+    })
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
+</script>
+
