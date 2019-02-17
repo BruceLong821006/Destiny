@@ -15,8 +15,15 @@
             <input type="text" class="form-control" id="txtNum" />
         </div>
         <div class="col-md-2">
-            @*<input type="button" value="开始测算" id="btnSubmit" class="btn btn-default" />*@
-            <input type="button" value="支付测算" id="btnAliPay" class="btn btn-primary" />
+            @if (ViewBag.RoleID != null && ViewBag.RoleID == 2)
+            {
+                <input type="button" value="开始测算" id="btnSubmit" class="btn btn-default" />
+            }
+            else
+            {
+                <input type="button" value="支付测算" id="btnAliPay" class="btn btn-primary" />
+            }
+            
         </div>
     </div>    
 </div>
