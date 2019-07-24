@@ -38,12 +38,15 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12" style="align-content:flex-start; text-align:left;">
-                        <label class="control-label">编号：</label>
-                        <label id="num" class="control-label" style="text-align:left;"></label>
+                @if (ViewBag.RoleID != null && ViewBag.RoleID == 2)
+                {
+                    <div class="row">
+                        <div class="col-lg-12" style="align-content:flex-start; text-align:left;">
+                            <label class="control-label">编号：</label>
+                            <label id="num" class="control-label" style="text-align:left;"></label>
+                        </div>
                     </div>
-                </div>
+                }
                 <div class="row" style="margin-top:10px;">
                     <div class="col-lg-12" style="align-content:flex-start;">
                         <label id="result" class="control-label" style="text-align:left;"></label>
