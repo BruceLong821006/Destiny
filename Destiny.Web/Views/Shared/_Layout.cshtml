@@ -38,6 +38,7 @@
                     @if (!string.IsNullOrEmpty(ViewBag.UserName) && ViewBag.RoleID == 2)
                     {
                         <li>@Html.ActionLink("笔画管理", "StrokeManagement", "Manage")</li>
+                        <li>@Html.ActionLink("内容管理", "MssageMgnt", "Manage")</li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

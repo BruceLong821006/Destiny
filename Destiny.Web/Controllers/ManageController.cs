@@ -19,6 +19,11 @@ namespace Destiny.Web.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        public ActionResult MssageMgnt()
+        {
+            return View();
+        }
+
         public ActionResult StrokeManagement()
         {
             return View();
@@ -31,6 +36,20 @@ namespace Destiny.Web.Controllers
             {
                 DBHelper db = new DBHelper();
                 var list = db.GetStrokeList(key);
+                return Json(new { data = list }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = "Error", ErrorMessage = ex.Message });
+            }
+        }
+
+        public JsonResult LoadMessage(string key)
+        {
+            try
+            {
+                DBHelper db = new DBHelper();
+                var list = db.GetMessageList(key);
                 return Json(new { data = list }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

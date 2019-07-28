@@ -275,6 +275,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AliPayConfig.cs" />
+    <Compile Include="Models\ForcastMessageViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OrderViewModel.cs" />
@@ -611,6 +612,7 @@
     <Content Include="Views\Forecast\NameForecast.cshtml" />
     <Content Include="Views\Forecast\SixtyFourDong.cshtml" />
     <Content Include="Views\Manage\StrokeManagement.cshtml" />
+    <Content Include="Views\Manage\MssageMgnt.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

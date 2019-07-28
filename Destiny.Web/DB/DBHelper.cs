@@ -209,6 +209,25 @@ namespace Destiny.Web.DB
             return list;
         }
 
+        public List<ForcastMessageViewModels> GetMessageList(string code)
+        {
+            List<ForcastMessageViewModels> list = null;
+
+            using (Elin8999Entities db = new Elin8999Entities())
+            {
+                var strokes = db.ForcastMessages.Where(w => code.Equals("") || w.Code.Equals(code));
+
+                if (strokes != null && strokes.Count() > 0)
+                    list = strokes.Select(s => new ForcastMessageViewModels
+                    {
+                        ID = s.ID,
+                        Code = s.Code,
+                        Content = s.Content.Substring(0, 20)
+                    }).ToList();
+            }
+            return list;
+        }
+
         public void SaveStroke(Stroke stroke)
         {
             using (Elin8999Entities db = new Elin8999Entities())
