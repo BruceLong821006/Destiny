@@ -222,8 +222,26 @@ namespace Destiny.Web.DB
                     {
                         ID = s.ID,
                         Code = s.Code,
-                        Content = s.Content.Substring(0, 20)
+                        Content = s.Content.Substring(0, 80) + "......"
                     }).ToList();
+            }
+            return list;
+        }
+
+        public ForcastMessageViewModels GetMessageByID(int ID)
+        {
+            ForcastMessageViewModels list = null;
+
+            using (Elin8999Entities db = new Elin8999Entities())
+            {
+                var strokes = db.ForcastMessages.Where(w => w.ID == ID).FirstOrDefault();
+                if (strokes != null)
+                    list = new ForcastMessageViewModels
+                    {
+                        ID = strokes.ID,
+                        Code = strokes.Code,
+                        Content = strokes.Content
+                    };
             }
             return list;
         }

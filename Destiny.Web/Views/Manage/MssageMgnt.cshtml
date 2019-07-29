@@ -18,9 +18,9 @@
             <thead>
                 <tr>
                     <th style="width:30px;">NO.</th>
-                    <th style="width:200px;">号码</th>
+                    <th style="width:100px;">号码</th>
                     <th style="text-align:center;">内容</th>
-                    <th style="width:200px;">Action</th>
+                    <th style="width:100px;">Action</th>
                 </tr>
             </thead>
         </table>
@@ -39,16 +39,16 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <label class="control-label col-sm-2">号码：</label>
-                    <div style="align-content:flex-start; text-align:left;">
-                        <input id="lblWord" type="text" class="form-control" style="text-align:left;" />
+                    <label class="control-label col-sm-2">代码：</label>
+                    <div class="col-sm-10" style="align-content:flex-start; text-align:left;">
+                        <input id="lblCode" type="text" class="form-control" style="text-align:left;" />
                         <input type="hidden" id="hdnID" />
                     </div>
                 </div>
                 <div class="row" style="margin-top:10px;">
-                    <label id="result" class="control-label col-sm-2" style="text-align:left;">内容：</label>
-                    <div style="align-content:flex-start;">
-                        <input id="txtStroke" type="text" class="form-control" />
+                    <label id="result" class="control-label col-sm-2">内容：</label>
+                    <div class="col-sm-10">
+                        <textarea id="txtContent" type="text" class="form-control" style="width:80%;" ></textarea>
                     </div>
                 </div>
             </div>
@@ -147,16 +147,27 @@
     {
         var btn = $(obj);
         var id = btn.attr("no");
-        var word = btn.attr("word");
-        var Cnt = btn.attr("cnt");
-        $("#lblWord").val(word);
-        $("#lblWord").attr("disabled", "disabled");
+        var Code = btn.attr("Code");
+        $("#lblCode").val(Code);    
+        $("#lblCode").attr("disabled", "disabled");
         $("#hdnID").val(id);
-        $("#txtStroke").val(Cnt);
         $("#hdnMode").val("Edit");
-        $("#View").modal("show");
+        $.ajax({
+            url: "/Manage/GetMessageById",
+            type: "get",
+            datatype: "json",
+            data: { Id: parseInt(id) },
+            success: function (result) {
+                if (result.Status == "Success") {
+                    $("#txtContent").val(result.data.Content);
+                    $("#View").modal("show");
+                }
+                else
+                    alert(json.ErrorMessage);
+            },
+            error: function () {
+            }
+        });
     }
-
-
 
 </script>

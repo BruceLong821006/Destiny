@@ -58,6 +58,20 @@ namespace Destiny.Web.Controllers
             }
         }
 
+        public JsonResult GetMessageById(int Id)
+        {
+            try
+            {
+                DBHelper db = new DBHelper();
+                var list = db.GetMessageByID(Id);
+                return Json(new { Status = "Success", data = list }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = "Error", ErrorMessage = ex.Message });
+            }
+        }
+
         public JsonResult SaveStroke(Stroke stroke, string mode)
         {
             try
