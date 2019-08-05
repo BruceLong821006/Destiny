@@ -136,7 +136,7 @@
             url: "/Forecast/SixtyFourDongCalc",
             type: "get",
             datatype: "json",
-            data: { firstNum: firstNum, secondNum: secondNum },
+            data: { firstNum: secondNum, secondNum: firstNum },
             success: function (data) {
                 var json = eval("(" + data + ")");
                 if (json.Status == "Success") {
