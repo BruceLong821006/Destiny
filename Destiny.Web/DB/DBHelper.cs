@@ -387,6 +387,35 @@ namespace Destiny.Web.DB
                 throw ex;
             }
         }
+
+        public void SaveMessage(int ID, string Code, string message)
+        {
+            try
+            {
+                using (Elin8999Entities db = new Elin8999Entities())
+                {
+                    var detail = db.ForcastMessages.Where(w => w.ID == ID && w.Code == Code).FirstOrDefault();
+                    if (detail != null)
+                    {
+                        detail.Content = message;
+                        detail.CreateTime = DateTime.Now;
+                    }
+                    else
+                    {
+                        detail = db.ForcastMessages.Create();
+                        detail.Code = Code;
+                        detail.Content = message;
+                        detail.CreateTime = DateTime.Now;
+                        db.ForcastMessages.Add(detail);
+                    }
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 
 

@@ -424,7 +424,7 @@ namespace Destiny.Web.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -475,6 +475,24 @@ namespace Destiny.Web.Controllers
             Error
         }
 
-#endregion
+        #endregion
+
+        [HttpPost]
+        public ActionResult SaveMessage()
+        {
+            string ID = "";
+            string Code = "";
+            string MSG = "";
+            try
+            {
+                DBHelper db = new DBHelper();
+                db.SaveMessage(int.Parse(ID), Code, MSG);
+                return Json(new { ErrorCode = 0 }, JsonRequestBehavior.DenyGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ErrorCode = 1, ErrorMessage = ex.Message }, JsonRequestBehavior.DenyGet);
+            }
+        }
     }
 }

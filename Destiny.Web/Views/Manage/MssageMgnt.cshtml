@@ -7,6 +7,17 @@
 <link href="~/Content/font-awesome.css" rel="stylesheet" />
 <link href="~/Content/jquery.notebook.css" rel="stylesheet" />
 <link href="~/Content/style.css" rel="stylesheet" />
+<style type="text/css">
+    .div-note {
+        float:left; 
+        text-align:left;
+        -webkit-user-modify:read-write; 
+        overflow-wrap:break-word; 
+        -webkit-line-break:after-white-space;
+        overflow-y:auto;
+        max-height: 40em;
+    }
+</style>
 <div class='row panel panel-info' style="margin-top: 10px;">
     <div class='panel-heading' style="height:40px;">
         <span style="font-size:16pt; font-family:'Microsoft YaHei';display:inline-block;" class="col-sm-2">@ViewBag.Title.</span>
@@ -41,20 +52,22 @@
                 <input type="hidden" id="hdnMode" />
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <label class="control-label col-sm-2">代码：</label>
-                    <div class="col-sm-10" style="align-content:flex-start; text-align:left;">
-                        <input id="lblCode" type="text" class="form-control" style="text-align:left;" />
-                        <input type="hidden" id="hdnID" />
+                <form id="msgForm">
+                    <div class="row">
+                        <label class="control-label col-sm-2">代码：</label>
+                        <div class="col-sm-10" style="align-content:flex-start; text-align:left;">
+                            <input id="lblCode" type="text" class="form-control" style="text-align:left;" />
+                            <input type="hidden" id="hdnID" />
+                        </div>
                     </div>
-                </div>
-                <div class="row" style="margin-top:10px;">
-                    <div class="col-sm-12" id="divContent">
-                        <label id="lblContent" class="control-label" style="text-align:left; display:none;"></label>
-                        <input type="text" id="txtContent" multiple="multiple" class="form-control" style="text-align:left; display:none;" />
-                        <div class="my-editor" style="float:left; text-align:left; -webkit-user-modify:read-write; overflow-wrap:break-word; -webkit-line-break:after-white-space;"></div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-sm-12" id="divContent">
+                            <label id="lblContent" class="control-label" style="text-align:left; display:none;"></label>
+                            <input type="text" id="txtContent" multiple="multiple" class="form-control" style="text-align:left; display:none;" />
+                            <div id="divEdit" class="my-editor div-note"></div>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -76,15 +89,18 @@
 
         $("#btnSave").click(function () {
             var id = $("#hdnID").val();
-            var cnt = $("#txtStroke").val();
-            var word = $("#lblWord").val();
-            var mode = $("#hdnMode").val();
-            var data = { ID: id, Words: word, StrokeCnt: cnt, mode: mode };
+            var code = $("#lblCode").val();
+            var msg = $("#divEdit").html();
+            var data = {
+                ID: id,
+                Code: code,
+                MSG: msg
+            };
             $.ajax({
-                url: "/Manage/SaveStroke",
-                type: "get",
+                url: "/Manage/SaveMessage",
+                type: "post",
                 datatype: "json",
-                data: data,
+                data: $("#msgForm").serialize(),
                 success: function (result) {
                     var json = eval("(" + result + ")");
                     if (json.Status == "Success") {
@@ -168,7 +184,6 @@
             success: function (result) {
                 if (result.Status == "Success") {
                     $(".my-editor").append(result.data.Content);
-                    $("#txtContent").val(result.data.Content);
                     $("#View").modal("show");
                 }
                 else
