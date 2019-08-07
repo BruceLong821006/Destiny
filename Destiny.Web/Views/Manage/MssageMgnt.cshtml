@@ -1,9 +1,12 @@
 ﻿
 @{
-    ViewBag.Title = "MssageMgnt";
+    ViewBag.Title = "内容管理";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="~/Content/font-awesome.css" rel="stylesheet" />
+<link href="~/Content/jquery.notebook.css" rel="stylesheet" />
+<link href="~/Content/style.css" rel="stylesheet" />
 <div class='row panel panel-info' style="margin-top: 10px;">
     <div class='panel-heading' style="height:40px;">
         <span style="font-size:16pt; font-family:'Microsoft YaHei';display:inline-block;" class="col-sm-2">@ViewBag.Title.</span>
@@ -46,9 +49,10 @@
                     </div>
                 </div>
                 <div class="row" style="margin-top:10px;">
-                    <label id="result" class="control-label col-sm-2">内容：</label>
-                    <div class="col-sm-10">
-                        <textarea id="txtContent" type="text" class="form-control" style="width:80%;" ></textarea>
+                    <div class="col-sm-12" id="divContent">
+                        <label id="lblContent" class="control-label" style="text-align:left; display:none;"></label>
+                        <input type="text" id="txtContent" multiple="multiple" class="form-control" style="text-align:left; display:none;" />
+                        <div class="my-editor" style="float:left; text-align:left; -webkit-user-modify:read-write; overflow-wrap:break-word; -webkit-line-break:after-white-space;"></div>
                     </div>
                 </div>
             </div>
@@ -59,7 +63,8 @@
         </div>
     </div>
 </div>
-
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Content/jquery.notebook.js"></script>
 <script type="text/javascript">
     $(function () {
         LoadMessageList("");
@@ -103,6 +108,8 @@
             $("#lblWord").removeAttr("disabled");
             $("#View").modal("show");
         });
+
+        //$('.my-editor').notebook();
     });
 
     function LoadMessageList(key)
@@ -145,10 +152,11 @@
 
     function EditStroke(obj)
     {
+        //var editor = K.create('textarea[name="content"]', options);
         var btn = $(obj);
         var id = btn.attr("no");
         var Code = btn.attr("Code");
-        $("#lblCode").val(Code);    
+        $("#lblCode").val(Code);
         $("#lblCode").attr("disabled", "disabled");
         $("#hdnID").val(id);
         $("#hdnMode").val("Edit");
@@ -159,6 +167,7 @@
             data: { Id: parseInt(id) },
             success: function (result) {
                 if (result.Status == "Success") {
+                    $(".my-editor").append(result.data.Content);
                     $("#txtContent").val(result.data.Content);
                     $("#View").modal("show");
                 }
