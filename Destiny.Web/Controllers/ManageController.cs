@@ -478,20 +478,17 @@ namespace Destiny.Web.Controllers
         #endregion
 
         [HttpPost]
-        public ActionResult SaveMessage()
+        public JsonResult SaveMessage(ForcastMessageViewModels Model)
         {
-            string ID = "";
-            string Code = "";
-            string MSG = "";
             try
             {
                 DBHelper db = new DBHelper();
-                db.SaveMessage(int.Parse(ID), Code, MSG);
-                return Json(new { ErrorCode = 0 }, JsonRequestBehavior.DenyGet);
+                db.SaveMessage(Model.ID, Model.Code, Model.Content);
+                return Json(new JavaScriptSerializer().Serialize(new { Status = "Success" }), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new { ErrorCode = 1, ErrorMessage = ex.Message }, JsonRequestBehavior.DenyGet);
+                return Json(new JavaScriptSerializer().Serialize(new { Status = "Error", ErrorMessage = ex.Message }), JsonRequestBehavior.AllowGet);
             }
         }
     }

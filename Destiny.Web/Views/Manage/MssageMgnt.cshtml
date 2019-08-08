@@ -51,28 +51,27 @@
                 </h4>
                 <input type="hidden" id="hdnMode" />
             </div>
-            <div class="modal-body">
-                <form id="msgForm">
+            <form id="msgForm">
+                <div class="modal-body">
                     <div class="row">
                         <label class="control-label col-sm-2">代码：</label>
                         <div class="col-sm-10" style="align-content:flex-start; text-align:left;">
-                            <input id="lblCode" type="text" class="form-control" style="text-align:left;" />
-                            <input type="hidden" id="hdnID" />
+                            <input id="lblCode" type="text" name="Code" class="form-control" style="text-align:left;" />
+                            <input type="hidden" id="hdnID" name="ID" />
                         </div>
                     </div>
                     <div class="row" style="margin-top:10px;">
-                        <div class="col-sm-12" id="divContent">
-                            <label id="lblContent" class="control-label" style="text-align:left; display:none;"></label>
-                            <input type="text" id="txtContent" multiple="multiple" class="form-control" style="text-align:left; display:none;" />
-                            <div id="divEdit" class="my-editor div-note"></div>
+                        <div style="width:97%">
+                            <textarea id="txtContent" class="form-control" style="margin-left:15px; max-width:520px; max-height:400px; height:300px;"></textarea>
+                            <div id="divEdit" class="my-editor div-note" style="display:none;"></div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnSave">保存</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="btnSave">保存</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -90,29 +89,36 @@
         $("#btnSave").click(function () {
             var id = $("#hdnID").val();
             var code = $("#lblCode").val();
-            var msg = $("#divEdit").html();
+            var msg = $("#txtContent").val();
             var data = {
-                ID: id,
+                ID: parseInt(id),
                 Code: code,
-                MSG: msg
+                Content: msg
             };
             $.ajax({
                 url: "/Manage/SaveMessage",
                 type: "post",
                 datatype: "json",
-                data: $("#msgForm").serialize(),
+                data: data,
                 success: function (result) {
                     var json = eval("(" + result + ")");
                     if (json.Status == "Success") {
                         $("#View").modal("hide");
-                        alert("修改成功！")
+                        alert("修改成功！");
                         location.reload();
                     }
                     else
                         alert(json.ErrorMessage);
                 },
-                error: function () {
-
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    // 状态码
+                    alert(XMLHttpRequest.status);
+                    // 状态
+                    alert(XMLHttpRequest.readyState);
+                    // 错误信息   
+                    alert(textStatus);
                 }
             });
         });
@@ -183,6 +189,7 @@
             data: { Id: parseInt(id) },
             success: function (result) {
                 if (result.Status == "Success") {
+                    $("#txtContent").val(result.data.Content);
                     $(".my-editor").append(result.data.Content);
                     $("#View").modal("show");
                 }
